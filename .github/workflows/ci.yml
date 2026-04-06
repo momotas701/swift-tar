@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-linux:
+    name: Linux (swift:${{ matrix.swift-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        swift-version: ['6.1', '6.2']
+    container:
+      image: swift:${{ matrix.swift-version }}-noble
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Python
+        run: apt-get update -q && apt-get install -y -q python3
+      - name: Fetch test fixtures
+        run: python3 Vendor/checkout-dependency libarchive
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  build-macos:
+    name: macOS
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.4.app
+      - name: Fetch test fixtures
+        run: python3 Vendor/checkout-dependency libarchive
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  build-windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: compnerd/gha-setup-swift@main
+        with:
+          swift-version: swift-6.1-release
+          swift-build: 6.1-RELEASE
+      - uses: actions/checkout@v6
+      - name: Fetch test fixtures
+        run: python3 Vendor/checkout-dependency libarchive
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
+  embedded-build:
+    name: Embedded Swift
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.1-noble
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify Embedded Swift compilation
+        run: |
+          swiftc \
+            -enable-experimental-feature Embedded \
+            -target x86_64-unknown-none-elf \
+            -parse-as-library \
+            -module-name Tar \
+            -wmo \
+            Sources/Tar/*.swift \
+            -c -o /dev/null
+
+  static-linux:
+    name: Static Linux SDK
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.1-noble
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Static Linux SDK
+        run: swift sdk install https://download.swift.org/swift-6.1-release/static-sdk/swift-6.1-RELEASE/swift-6.1-RELEASE_static-linux-0.0.1.artifactbundle.tar.gz --checksum 111c6f7d280a651208b8c74c0521dd99365d785c1976a6e23162f55f65379ac6
+      - name: Build with Static Linux SDK
+        run: swift build --swift-sdk x86_64-swift-linux-musl
+
+  build-wasm:
+    name: WebAssembly (WASI)
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.2-noble
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Swift SDK for WebAssembly
+        run: swift sdk install https://download.swift.org/swift-6.2.4-release/wasm-sdk/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE_wasm.artifactbundle.tar.gz --checksum 32fdb8772d73bb174f77b5c59bc88a0d55003d75712832129394d3465158fb43
+      - name: Build
+        run: swift build --swift-sdk swift-6.2.4-RELEASE_wasm
+
+  build-android:
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: skiptools/swift-android-action@v2
+        with:
+          swift-version: '6.1'
+          run-tests: false
+
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.1-noble
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check formatting
+        run: swift format lint --strict --recursive Sources/ Tests/

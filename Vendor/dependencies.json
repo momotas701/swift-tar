@@ -1,0 +1,8 @@
+{
+  "libarchive": {
+    "repository": "https://github.com/libarchive/libarchive.git",
+    "revision": "a255a8425032760be54d9d6ab430a051a2aade14",
+    "sparse-checkout": "libarchive/test",
+    "categories": ["default"]
+  }
+}
