@@ -64,7 +64,8 @@ struct TarWriterTests {
         // Paths between 101 and 256 bytes on a UStar header should be stored
         // using the prefix/name split rather than a GNU long-name extension.
         var writer = TarWriter()
-        let path = String(repeating: "dir/", count: 30) + "file.txt"  // 128 chars total, split into prefix + name
+        // 128 chars total, split into prefix + name
+        let path = String(repeating: "dir/", count: 30) + "file.txt"
         var header = Header(asUstar: ())
         header.entryType = .regular
         header.setMode(0o644)
